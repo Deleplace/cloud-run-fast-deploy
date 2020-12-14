@@ -10,10 +10,14 @@ import (
 const color = `red`
 
 func main() {
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+	http.HandleFunc("/color", func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Access-Control-Allow-Origin", "*")
 		log.Println("Serving", color)
 		fmt.Fprintln(w, color)
 	})
+
+	fs := http.StripPrefix("/fir/", http.FileServer(http.Dir("./fir")))
+	http.Handle("/fir/", fs)
 
 	port := os.Getenv("PORT")
 	if port == "" {

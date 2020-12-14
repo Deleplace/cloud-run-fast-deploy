@@ -1,0 +1,59 @@
+<img src="fir.png" />
+
+<template id="ball">
+    <svg class="ball"
+     version="1.1"
+     baseProfile="full"
+     width="80" height="80"
+     xmlns="http://www.w3.org/2000/svg">
+     <rect x="26" y="5" width="15" height="15" rx="5" fill="#AAA" />
+        <circle cx="40" cy="40" r="30" fill="black" class="color-holder" />
+        <circle cx="30" cy="30" r="4" fill="white" />
+    </svg>
+</template> 
+
+
+<script>
+    // const colorServer = `http://localhost:8080`;
+    const colorServer = ``;
+    const colorService = `/color`;
+
+    let addBall = color => {
+        let template = document.querySelector('#ball');
+        let ball = template.content.firstElementChild.cloneNode(true);
+        
+        ball.querySelector('.color-holder').setAttribute("fill", color);
+        let top = 30 + Math.floor(Math.random() * 340);
+        let left = 360 - top + Math.floor(Math.random() * 1.8 * top);
+        ball.style.top = top  + "px";
+        ball.style.left = left  + "px";
+        document.body.appendChild(ball);
+        let fade = opacity => {
+            if(opacity<=0) {
+                ball.remove();
+                return;
+            }
+            ball.style.opacity = opacity + "%";
+            setTimeout(fade, 50, opacity-2);
+        };
+        fade(100);
+    }
+
+    let loop = () => {
+        fetch(colorServer + colorService)
+            .then(response => response.text())
+            .then(text => {
+                let color = text.trim();
+                console.debug(`Adding a ${color} ball`);
+                addBall(color);
+            });
+        setTimeout(loop, 300)
+    }
+    loop();
+</script>
+
+<style>
+    svg.ball {
+        position: absolute;
+    }
+</style>
