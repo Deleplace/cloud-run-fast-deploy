@@ -7,7 +7,7 @@ import (
 	"os"
 )
 
-const color = `yellow`
+const color = `red`
 
 func main() {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
